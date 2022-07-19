@@ -11,6 +11,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import br.com.erudio.controllers.PersonController;
 import br.com.erudio.data.vo.v1.PersonVO;
+import br.com.erudio.exceptions.RequiredObjectIsNullException;
 import br.com.erudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.mapper.DozerMapper;
 import br.com.erudio.model.Person;
@@ -49,6 +50,9 @@ public class PersonServices {
 	}
 	
 	public PersonVO create(PersonVO person) throws Exception {
+		
+		if(person == null) throw new RequiredObjectIsNullException();
+		
 		logger.info("Creating one person");
 		Person entity = DozerMapper.parseObject(person, Person.class);
 		PersonVO vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
@@ -57,6 +61,9 @@ public class PersonServices {
 	}
 	
 	public PersonVO update(PersonVO person) throws Exception {
+		
+		if(person == null) throw new RequiredObjectIsNullException();
+		
 		logger.info("Updating one person");
 		Person pessoa = repository.findById(person.getKey()).orElseThrow(() -> new ResourceNotFoundException("No records founds for this id!!"));
 		
